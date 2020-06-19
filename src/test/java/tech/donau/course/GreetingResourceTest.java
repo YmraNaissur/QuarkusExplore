@@ -3,12 +3,14 @@ package tech.donau.course;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 
 @QuarkusTest
 public class GreetingResourceTest {
-
     @Test
     public void testHelloEndpoint() {
         given()
@@ -18,4 +20,13 @@ public class GreetingResourceTest {
              .body(is("hello"));
     }
 
+    @Test
+    public void testHelloWithNameEndpoint() {
+        final String name = UUID.randomUUID().toString();
+        given()
+                .when().get("/hello/" + name)
+                .then()
+                .statusCode(200)
+                .body(is(String.format("Hello %s, your ID is %s.", name, "1234")));
+    }
 }
